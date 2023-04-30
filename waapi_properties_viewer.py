@@ -5,7 +5,6 @@ from PySide6.QtGui import *
 from PySide6.QtCore import *
 import qdarktheme
 
-
 from waapi_support import MyClient, RootPath, WaapiObject, CannotConnectToWaapiException
 import rc_wwise_icons
 
@@ -13,17 +12,17 @@ TREE_ITEM_DATA_ROLE = Qt.ItemDataRole.UserRole
 TABLE_ITEM_DATA_ROLE = Qt.ItemDataRole.UserRole
 
 ICONS = {
-    'voice': 'waapi_support/object_icons/ObjectIcons_SoundVoice_nor.png',
-    WaapiObject.BlendContainer: 'waapi_support/object_icons/ObjectIcons_SequenceContainer_nor.png',
-    WaapiObject.WorkUnit: 'waapi_support/object_icons/ObjectIcons_Workunit_nor.png',
-    WaapiObject.Folder: 'waapi_support/object_icons/ObjectIcons_Folder_nor.png',
-    WaapiObject.Sound: 'waapi_support/object_icons/ObjectIcons_SoundFX_nor.png',
-    WaapiObject.Event: 'waapi_support/object_icons/ObjectIcons_Event_nor.png',
-    WaapiObject.SoundBank: 'waapi_support/object_icons/ObjectIcons_Soundbank_nor.png',
-    WaapiObject.RandomSequenceContainer: 'waapi_support/object_icons/ObjectIcons_RandomContainer_nor.png',
-    WaapiObject.ActorMixer: 'waapi_support/object_icons/ObjectIcons_ActorMixer_nor.png',
-    WaapiObject.SourcePlugin: 'waapi_support/object_icons/ObjectIcons_SourcePlugin_nor.png',
-    WaapiObject.AudioFileSource: 'waapi_support/object_icons/ObjectIcons_AudioFile_nor.png'
+    'voice': ':icons/waapi_support/object_icons/ObjectIcons_SoundVoice_nor.png',
+    WaapiObject.BlendContainer: ':icons/waapi_support/object_icons/ObjectIcons_SequenceContainer_nor.png',
+    WaapiObject.WorkUnit: ':icons/waapi_support/object_icons/ObjectIcons_Workunit_nor.png',
+    WaapiObject.Folder: ':icons/waapi_support/object_icons/ObjectIcons_Folder_nor.png',
+    WaapiObject.Sound: ':icons/waapi_support/object_icons/ObjectIcons_SoundFX_nor.png',
+    WaapiObject.Event: ':icons/waapi_support/object_icons/ObjectIcons_Event_nor.png',
+    WaapiObject.SoundBank: ':icons/waapi_support/object_icons/ObjectIcons_Soundbank_nor.png',
+    WaapiObject.RandomSequenceContainer: ':icons/waapi_support/object_icons/ObjectIcons_RandomContainer_nor.png',
+    WaapiObject.ActorMixer: ':icons/waapi_support/object_icons/ObjectIcons_ActorMixer_nor.png',
+    WaapiObject.SourcePlugin: ':icons/waapi_support/object_icons/ObjectIcons_SourcePlugin_nor.png',
+    WaapiObject.AudioFileSource: ':icons/waapi_support/object_icons/ObjectIcons_AudioFile_nor.png'
 }
 
 
@@ -58,7 +57,7 @@ class Worker(QObject):
             icon_path = ICONS.get(_type, '')
             if _type == WaapiObject.Sound and self.client.get_property(w_data['id'], '@IsVoice'):
                 icon_path = ICONS.get('voice', '')
-            icon = QIcon(str(icon_path))
+            icon = QIcon(QPixmap(icon_path))
             return icon
 
         def add_node(self, parent_item, parent_path):
@@ -81,7 +80,7 @@ class Worker(QObject):
             item = QTreeWidgetItem()
             item_path = str(path)
             item.setText(0, item_path.replace('\\', ''))
-            icon = QIcon('waapi_support/object_icons/ObjectIcons_PhysicalFolder_nor.png')
+            icon = QIcon(QPixmap(':icons/waapi_support/object_icons/ObjectIcons_PhysicalFolder_nor.png'))
             item.setIcon(0, icon)
             add_node(self, item, item_path)
             items.append(item)
@@ -139,7 +138,7 @@ class PropertyWindow(QWidget):
         for i in self.data:
             for k, v in i.items():
                 if text.lower() in str(k).lower():
-                    self.text_browser.append(json.dumps({k:v},ensure_ascii=False,indent=2))
+                    self.text_browser.append(json.dumps({k: v}, ensure_ascii=False, indent=2))
 
 
 class Window(QWidget):
@@ -289,8 +288,3 @@ if __name__ == '__main__':
     window.setWindowTitle('WAAPI Properties Viewer')
     window.show()
     app.exec()
-
-# with MyClient() as client:
-#     sel_id = client.get_selected_objects()[0]['id']
-#     print(client.get_property(sel_id,'@RandomOrSequence'))
-#     client.disconnect()
